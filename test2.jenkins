@@ -1,0 +1,25 @@
+pipeline {
+    agent { 
+        label 'master'
+        }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        timestamps()
+		}
+		stage("change hosts") {
+            steps {
+					sh 'ssh root@192.168.7.80 \'cp \etc\hosts \etc\hosts.ORG\'' 
+				steps {
+					sh 'ssh root@192.168.7.80 \'echo 192.168.7.80 C2 >> \tmp\hosts\''
+				}
+				steps {
+					sh 'ssh root@192.168.7.80 \'cat \etc\hosts\''
+				}
+            }
+			stage("nslookup") {
+				staps {
+					sh 'ssh root@192.168.7.80 \'nslookup C2\''
+				}
+        }
+	}
+}

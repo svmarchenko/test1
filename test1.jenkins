@@ -1,15 +1,26 @@
 pipeline {
-    agent any
-    option {timestamps()}
+    agent { 
+        label 'master'
+        }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        timestamps()
+    }
     stages {
-        stage('Install mc') {
+        stage("Hostname") {
             steps {
-                steps { sh 'ssh root@192.168.7.80 \'hostname\''}
-                }
+                sh 'ssh root@192.168.7.80 \'hostname\''
+            }
+        }
+        stage("yum install") {
             steps {
-                steps { sh 'ssh root@192.168.7.80 \'yum install mc\''}
-                }           
+                sh 'ssh root@192.168.7.80 \'yum install mc\''
+            }
+        }
+		stage("yum list") {
+            steps {
+                sh 'ssh root@192.168.7.80 \'yum list installed | greep mc\''
             }
         }
     }
-
+}

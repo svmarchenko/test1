@@ -8,17 +8,17 @@ pipeline {
 		}
 		stage("change hosts") {
             steps {
-					sh 'ssh root@192.168.7.80 \'cp \etc\hosts \etc\hosts.ORG\'' 
+					sh 'ssh root@192.168.7.80 \'hostname\'' 
 				steps {
-					sh 'ssh root@192.168.7.80 \'echo 192.168.7.80 C2 >> \tmp\hosts\''
+					sh 'ssh root@192.168.7.80 \'pwd\''
 				}
 				steps {
-					sh 'ssh root@192.168.7.80 \'cat \etc\hosts\''
+					sh 'ssh root@192.168.7.80 \'id\''
 				}
             }
 			stage("nslookup") {
 				staps {
-					sh 'ssh root@192.168.7.80 \'nslookup C2\''
+					sh 'ssh root@192.168.7.80 \'ip a\''
 				}
         }
 	}

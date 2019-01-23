@@ -14,7 +14,7 @@ pipeline {
         }
         stage("yum install") {
             steps {
-                sh 'ssh root@192.168.7.80 \'yum install mc\''
+                sh 'ssh root@192.168.7.80 \'yum install mc -y\''
             }
         }
 		stage("yum list") {

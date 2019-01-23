@@ -1,10 +1,15 @@
 pipeline {
     agent any
+    option {timestamps()}
     stages {
-        stage('Example') {
+        stage('Install mc') {
             steps {
-                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                steps { sh 'ssh root@192.168.7.80 \'hostname\''}
+                }
+            steps {
+                steps { sh 'ssh root@192.168.7.80 \'yum install mc\''}
+                }           
             }
         }
     }
-}
+

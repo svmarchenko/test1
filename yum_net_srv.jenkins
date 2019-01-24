@@ -1,0 +1,46 @@
+#!groovy
+// yum update/ install
+properties([disableConcurrentBuilds()])
+// you need had ssh-keygen 
+
+pipeline {
+    agent any
+	parameters {
+        //string(name: 'HOST', defaultValue: 'ssh root@192.168.7.80', description: 'HOSTs IP ADDRESS')
+		choice(name: 'HOST', choices: ['ssh root@192.168.7.80', 'ssh root@192.168.1.80', 'ssh root@192.168.7.80 -v'], description: 'USE IP OR FQDN ADDRESS')
+	    
+	    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        //retry(2)
+        timestamps()
+    }
+    stages {
+        stage("update") {
+            steps {
+                //sh "ssh root@192.168.7.80 \'yum update -y\'"
+                sh "${params.HOST} \'yum update -y\'"
+            }
+        }
+        stage("net-tools") {
+            steps {
+                sh "${params.HOST} \'yum install net-tools -y\'"
+            }
+        }
+		stage("bind-utils") {
+            steps {
+                sh "${params.HOST} \'yum install bind-utils -y\'"
+            }
+        }
+		stage("traceroute.x86_64") {
+            steps {
+                sh "${params.HOST} \'yum install traceroute.x86_64 -y\'"
+            }
+        } 
+		stage("NetworkManager") {
+            steps {
+                sh "${params.HOST} \'yum install NetworkManager.x86_64 -y\'"
+            }
+        } 
+    }
+}
